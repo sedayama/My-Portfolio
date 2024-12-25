@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TodoInterface } from "./types/ITodo";
 import Header from "@/components/Header";
 import Tabs from "@/components/Tabs";
@@ -7,18 +7,21 @@ import TodoList from "@/components/TodoList";
 import AddTodo from "@/components/AddTodo";
 
 export default function Home() {
-  const [todos, setTodos] = useState<TodoInterface[]>(() => {
-    const savedTodos = localStorage.getItem("todos");
-    return savedTodos
-      ? JSON.parse(savedTodos)
-      : [{ id: 1, title: "Todo 1", completed: false }];
-  });
+  const [todos, setTodos] = useState<TodoInterface[]>([]);
   const [todoText, setTodoText] = useState<string>("");
   const [selectedtab, setSelectedTab] = useState<string>("All");
+  useEffect(() => {
+    const storedTodos = localStorage.getItem("todos");
+
+    if (storedTodos) {
+      setTodos(JSON.parse(storedTodos));
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
+
   function handleSetTodoText(todoText: string) {
     setTodoText(todoText);
   }
